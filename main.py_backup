@@ -1,0 +1,53 @@
+import sqlite3
+import os
+from contextlib import contextmanager
+
+# Expand the home directory and use an absolute path
+db_path = os.path.expanduser("~/workspace/p1-to-duckdb/e_historie.db")
+# db_path = os.path.expanduser("~/p1monitor/alldata/mnt/ramdisk/e_historie.db")
+
+# Ensure the file exists
+if not os.path.exists(db_path):
+    raise FileNotFoundError(f"The database file does not exist: {db_path}")
+
+# Check if you have read permissions
+if not os.access(db_path, os.R_OK):
+    raise PermissionError(f"You don't have read permissions for the file: {db_path}")
+
+uri = f"file:{db_path}?mode=ro"
+
+@contextmanager
+def get_db_connection():
+    conn = None
+    try:
+        conn = sqlite3.connect(uri, uri=True)
+        yield conn
+    finally:
+        if conn:
+            conn.close()
+
+def query_sqlite(query):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+    return results
+
+# query = """
+# SELECT name FROM sqlite_master WHERE type='table';
+# """
+#
+# tables = query_sqlite(query)
+#
+# for table in tables:
+#     print(f"{table[0]}")
+
+query = """
+select * from e_history_min limit 5; 
+"""
+
+
+result = query_sqlite(query)
+
+for line in result:
+    print(f"{line}")
