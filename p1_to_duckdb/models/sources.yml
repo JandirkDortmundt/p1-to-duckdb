@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: p1_monitor
+    database: ''  # Will be filled in with the path
+    schema: main
+    tables:
+      - name: e_history_min
+      - name: e_history_uur
+      - name: e_history_dag
+      - name: e_history_maand
+      - name: e_history_jaar
