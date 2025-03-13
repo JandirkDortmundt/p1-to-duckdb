@@ -1,8 +1,8 @@
 {{
   config(
     materialized='incremental',
-    unique_key='timestamp',  -- Adjust based on your actual primary key
-    incremental_strategy='merge'
+    unique_key='timestamp',
+    incremental_strategy='append'
   )
 }}
 
